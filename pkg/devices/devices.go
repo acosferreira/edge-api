@@ -33,11 +33,19 @@ type ostree struct {
 }
 
 const (
-	inventoryAPI = "api/inventory/v1/hosts"
-	orderBy      = "updated"
-	orderHow     = "DESC"
-	filterParams = "?filter[system_profile][host_type]=edge&fields[system_profile]=host_type,operating_system,greenboot_status,greenboot_fallback_detected,rpm_ostree_deployments"
+	inventoryAPI               = "api/inventory/v1/hosts"
+	connection_status_endpoint = "api/cloud-connector/v1/connection/status"
+	orderBy                    = "updated"
+	orderHow                   = "DESC"
+	filterParams               = "?filter[system_profile][host_type]=edge&fields[system_profile]=host_type,operating_system,greenboot_status,greenboot_fallback_detected,rpm_ostree_deployments"
+	CONNECTED_STATUS           = "connected"
+	DISCONNECTED_STATUS        = "disconnected"
 )
+
+type connectionStatusResponse struct {
+	Status      string      `json:"status"`
+	Dispatchers interface{} `json:"dispatchers,omitempty"`
+}
 
 // ReturnDevices will return the list of devices without filter by tag or uuid
 func ReturnDevices(w http.ResponseWriter, r *http.Request) (Inventory, error) {
@@ -149,4 +157,26 @@ func ReturnDevicesByTag(w http.ResponseWriter, r *http.Request) (Inventory, erro
 	json.Unmarshal([]byte(body), &bodyResp)
 	log.Infof("struct: %v\n", bodyResp)
 	return bodyResp, nil
+}
+
+func ReturnDevicesStatus(w http.ResponseWriter, r *http.Request) {
+	fullURL := config.Get().InventoryConfig.URL + connection_status_endpoint
+	log.Infof("Requesting url: %s\n", fullURL)
+	req, _ := http.NewRequest("POST", fullURL, nil)
+	req.Header.Add("Content-Type", "application/json")
+	headers := common.GetOutgoingHeaders(r)
+	for key, value := range headers {
+		req.Header.Add(key, value)
+	}
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Error(fmt.Printf("ReturnDevicesByTag: %s", err))
+		return
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	var bodyResp connectionStatusResponse
+	json.Unmarshal([]byte(body), &bodyResp)
+	log.Infof("struct: %v\n", bodyResp)
+
 }
