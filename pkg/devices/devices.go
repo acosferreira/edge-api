@@ -175,6 +175,10 @@ func ReturnDevicesStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Error(fmt.Printf("ReturnDevicesByTag: %s", err))
+		return
+	}
 	var bodyResp connectionStatusResponse
 	json.Unmarshal([]byte(body), &bodyResp)
 	log.Infof("struct: %v\n", bodyResp)
