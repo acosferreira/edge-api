@@ -113,7 +113,7 @@ func (rb *RepoBuilder) BuildUpdateRepo(id uint) (*models.UpdateTransaction, erro
 				rb.log.WithField("error", err.Error()).Error("Error downloading tar")
 				return nil, fmt.Errorf("error Upload repo repo :: %s", err.Error())
 			}
-			err = rb.ExtractVersionRepo(update.Commit, tarFileName, path)
+			err = rb.ExtractVersionRepo(&commit, tarFileName, path)
 			if err != nil {
 				rb.log.WithField("error", err.Error()).Error("Error extracting repo")
 				return nil, err
