@@ -16,6 +16,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/knqyf263/go-rpm-version v0.0.0-20170716094938-74609b86c936
 	github.com/lib/pq v1.10.7
+	github.com/magiconair/properties v1.8.6
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/ginkgo/v2 v2.2.0
@@ -28,8 +29,8 @@ require (
 	golang.org/x/crypto v0.0.0-20220826181053-bd7e27e6170d // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gorm.io/driver/postgres v1.3.10
-	gorm.io/driver/sqlite v1.3.6
-	gorm.io/gorm v1.23.7
+	gorm.io/driver/sqlite v1.4.1
+	gorm.io/gorm v1.23.10
 )
 
 go 1.16
